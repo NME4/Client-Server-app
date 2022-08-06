@@ -8,14 +8,24 @@ public class Server {
         int client = 1;
         ServerSocket serverSocket = new ServerSocket(8000);
         System.out.println("Сервер запущен...");
-        while(true) {
+        while (true) {
             Socket clientSocket = serverSocket.accept();
-            System.out.println("client accepted " + (client ++));
+            System.out.println("client accepted " + (++client));
             OutputStreamWriter writer = new OutputStreamWriter(clientSocket.getOutputStream());
-            writer.write("Java");
 
+            //___________________________Читалка______________________________
+            BufferedReader breader = new BufferedReader(
+                    new InputStreamReader(
+                            clientSocket.getInputStream()));
+
+            String request = breader.readLine();
+            String response = "Yuour message length is " + request.length() + "\n";
+
+            writer.write(response);
             writer.flush();
 
+            //___________________________Закрывашки_____________________________
+            breader.close();
             writer.close();
             clientSocket.close();
         }
